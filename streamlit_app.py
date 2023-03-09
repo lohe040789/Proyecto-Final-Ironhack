@@ -16,9 +16,9 @@ Edad = st.sidebar.slider('Que edad tienes?', 10, 85, 25)
 Peso = st.sidebar.slider('Cuanto pesas?', 30, 150, 25)
 Estatura = st.sidebar.slider('Cuanto mides en "cm"?', 100, 200, 150)
 Tiempo_de_actividad = st.sidebar.slider('Cuantas horas al dia realizas actividad fisica?', 0, 4, 1)
-print(Genero, Edad, Peso, Estatura, Objetivo, Horario_de_la_actividad, Tipo_de_actividad, Tiempo_de_actividad)
 
 #Primero la información necesaria para realizar la formula
+
 edad = Edad
 genero = Genero.lower()
 peso = Peso
@@ -56,8 +56,9 @@ if objetivo == 'perder peso':
 elif objetivo == 'mantenerse':
     kcal = actividad_nivel
 elif objetivo == 'ganar masa muscular':
-    kcal = actividad_nivel + 500 
-print(kcal)    
-st.metric(label="Kcal", value= kcal)
+    kcal = actividad_nivel + 500     
+st.metric(label="Kcal", value= int(kcal))
+print(Genero, Edad, Peso, Estatura, Objetivo, Horario_de_la_actividad, Tipo_de_actividad, Tiempo_de_actividad, kcal)
+print(kcal)
 
 
