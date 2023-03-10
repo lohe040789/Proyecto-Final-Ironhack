@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 
 def calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad):
     # Aquí va todo el código para calcular el consumo diario de calorías
