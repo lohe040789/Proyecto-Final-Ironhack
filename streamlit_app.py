@@ -3,8 +3,20 @@ import pandas as pd
 import numpy as np
 import sqlalchemy as sa
 import plotly.graph_objs as go
+from PIL import Image
+from io import BytesIO
 
-# Titulo de la app
+    # Parametros de entrada:
+Genero = st.sidebar.selectbox('Genero?',('Hombre', 'Mujer'))
+Tipo_de_actividad = st.sidebar.selectbox('Que tipo de actividad realizas?', ('Sedentario', 'Ligera', 'Moderada', 'Intensa'))
+Objetivo = st.sidebar.selectbox('Que objetivo tienes?', ('Perder peso', 'Ganar masa muscular', 'Mantenerse'))
+Horario_de_la_actividad = st.sidebar.selectbox('A que hora realizas actividad fisica?', ('Mañana', 'Tarde', 'Noche'))
+Edad = st.sidebar.slider('Que edad tienes?', 10, 85, 25)
+Peso = st.sidebar.slider('Cuanto pesas?', 30, 150, 25)
+Estatura = st.sidebar.slider('Cuanto mides en "cm"?', 100, 200, 150)
+Tiempo_de_actividad = st.sidebar.slider('Cuantas horas al dia realizas actividad fisica?', 0, 4, 1)
+
+# Función para calcular el consumo diario de calorías
 def calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad):
     # Aquí va todo el código para calcular el consumo diario de calorías
     edad = Edad
@@ -49,33 +61,20 @@ def calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, 
         # return el resultado
     return kcal
 
-def main():
-    st.sidebar.title('Creado por "Lohe"')
-    st.title('Proyecto Final') 
-    st.title('Hagamos tu Menu')
-    st.header('Necesitamos unos datos para poder ayudarte')
+st.sidebar.title('Creado por "Lohe"')
+st.title('Proyecto Final') 
+st.title('Hagamos tu Menu')
+st.header('Necesitamos unos datos para poder ayudarte')
 
-    # Parametros de entrada:
-    Genero = st.sidebar.selectbox('Genero?',('Hombre', 'Mujer'))
-    Tipo_de_actividad = st.sidebar.selectbox('Que tipo de actividad realizas?', ('Sedentario', 'Ligera', 'Moderada', 'Intensa'))
-    Objetivo = st.sidebar.selectbox('Que objetivo tienes?', ('Perder peso', 'Ganar masa muscular', 'Mantenerse'))
-    Horario_de_la_actividad = st.sidebar.selectbox('A que hora realizas actividad fisica?', ('Mañana', 'Tarde', 'Noche'))
-    Edad = st.sidebar.slider('Que edad tienes?', 10, 85, 25)
-    Peso = st.sidebar.slider('Cuanto pesas?', 30, 150, 25)
-    Estatura = st.sidebar.slider('Cuanto mides en "cm"?', 100, 200, 150)
-    Tiempo_de_actividad = st.sidebar.slider('Cuantas horas al dia realizas actividad fisica?', 0, 4, 1)
 
     # Botón para calcular
-    if st.button('Calcular'):
+if st.button('Calcular'):
         # Ejecuta la función con los parámetros introducidos
-        resultado = calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad)
+    resultado = calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad)
         # Muestra el resultado
-        st.metric(label='Kcal', value=resultado)
+    st.metric(label='Kcal', value=resultado)
 
-if __name__ == '__main__':
-    main()
-
-
+# Función para consultar las recetas
 
 def consulta_recetas():
     # Conectar a la base de datos utilizando sqlalchemy
@@ -86,7 +85,8 @@ def consulta_recetas():
     conn = engine.connect()
 
     # Consultar las 5 recetas que sumen cierta cantidad de calorías
-    calorias_objetivo = 1000    
+    calorias_objetivo = calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad)
+    print(calorias_objetivo)
     query = sa.text(f"SELECT Nombre, Calorías_por_porción, Proteínas_por_porción, Carbohidratos_por_porción, Grasas_por_porción, Imagen FROM recetas WHERE Calorías_por_porción <= {calorias_objetivo} LIMIT 5")
     result = conn.execute(query)
 
