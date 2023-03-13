@@ -25,7 +25,7 @@ def calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, 
     actividad_nivel = Tipo_de_actividad.lower()
 
     if actividad_nivel == 'sedentario':
-        actividad_nivel = (30 * GEB_resultado /100) + GEB_resultado
+        actividad_nivel = (20 * GEB_resultado /100) + GEB_resultado
     elif actividad_nivel == 'ligera':
         actividad_nivel = (50 * GEB_resultado /100) + GEB_resultado
     elif actividad_nivel == 'moderada':
@@ -70,3 +70,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#En el teminal: streamlit run streamlit_app.py
