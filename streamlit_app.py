@@ -1,6 +1,10 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+import sqlalchemy as sa
+import plotly.graph_objs as go
 
+# Titulo de la app
 def calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad):
     # Aquí va todo el código para calcular el consumo diario de calorías
     edad = Edad
@@ -70,5 +74,44 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+def consulta_recetas():
+    # Conectar a la base de datos utilizando sqlalchemy
+    str_conn = 'mysql+pymysql://root:Reina-0601@localhost:3306/recetas'
+    engine = sa.create_engine(str_conn)
+
+    # Obtener una conexión a la base de datos
+    conn = engine.connect()
+
+    # Consultar las 5 recetas que sumen cierta cantidad de calorías
+    calorias_objetivo = 1000    
+    query = sa.text(f"SELECT Nombre, Calorías_por_porción, Proteínas_por_porción, Carbohidratos_por_porción, Grasas_por_porción, Imagen FROM recetas WHERE Calorías_por_porción <= {calorias_objetivo} LIMIT 5")
+    result = conn.execute(query)
+
+    # Mostrar los resultados en Streamlit
+    st.write(f"Mostrando las 5 recetas que suman {calorias_objetivo} calorías:")
+    for nombre, calorias, proteinas, carbohidratos, grasas, imagen_url  in result:
+        st.write(f"- {nombre}: {calorias} calorías")
+
+        # Mostrar la imagen de la receta
+        st.image(imagen_url, use_column_width=True)
+        
+        # Crear un gráfico de tarta
+        labels = ['Proteínas', 'Carbohidratos', 'Grasas']
+        values = [proteinas, carbohidratos, grasas]
+        fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+        st.plotly_chart(fig)
+
+
+    # Cerrar la conexión a la base de datos
+    conn.close()
+
+    # Crear un botón en Streamlit que llame a la función cuando se presiona
+if st.button("Consultar recetas"):
+    consulta_recetas()
+
+
 
 #En el teminal: streamlit run streamlit_app.py
