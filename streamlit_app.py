@@ -87,13 +87,15 @@ def consulta_recetas():
     # Consultar las 5 recetas que sumen cierta cantidad de calorías
     calorias_objetivo = calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad)
     print(calorias_objetivo)
-    query = sa.text(f"SELECT Nombre, Calorías_por_porción, Proteínas_por_porción, Carbohidratos_por_porción, Grasas_por_porción, Imagen FROM recetas WHERE Calorías_por_porción <= {calorias_objetivo} LIMIT 5")
+    query = sa.text(f"SELECT Nombre, Calorías_por_porción, Proteínas_por_porción, Carbohidratos_por_porción, Grasas_por_porción, URL, Imagen, Tipo_de_comida FROM recetas WHERE Calorías_por_porción <= {calorias_objetivo} AND Tipo_de_comida IN ('breakfast', 'lunch', 'dinner', 'snack') ORDER BY Tipo_de_comida LIMIT 5")
     result = conn.execute(query)
 
     # Mostrar los resultados en Streamlit
     st.write(f"Mostrando las 5 recetas que suman {calorias_objetivo} calorías:")
-    for nombre, calorias, proteinas, carbohidratos, grasas, imagen_url  in result:
+    for nombre, calorias, proteinas, carbohidratos, grasas, URL ,imagen_url, Tipo_de_comida  in result:
         st.write(f"- {nombre}: {calorias} calorías")
+        st.write(f" Preparación: {URL} ")
+        st.write(f" Tipo de comida: {Tipo_de_comida} ")
 
         # Mostrar la imagen de la receta
         st.image(imagen_url, use_column_width=True)
