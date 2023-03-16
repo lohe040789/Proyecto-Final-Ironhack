@@ -6,6 +6,8 @@ import plotly.graph_objs as go
 from PIL import Image
 from io import BytesIO
 
+
+st.sidebar.title('Rellena tus datos')
     # Parametros de entrada:
 Genero = st.sidebar.selectbox('Genero?',('Hombre', 'Mujer'))
 Tipo_de_actividad = st.sidebar.selectbox('Que tipo de actividad realizas?', ('Sedentario', 'Ligera', 'Moderada', 'Intensa'))
@@ -41,7 +43,7 @@ def calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, 
     actividad_nivel = Tipo_de_actividad.lower()
 
     if actividad_nivel == 'sedentario':
-        actividad_nivel = (20 * GEB_resultado /100) + GEB_resultado
+        actividad_nivel = (5 * GEB_resultado /100) + GEB_resultado
     elif actividad_nivel == 'ligera':
         actividad_nivel = (50 * GEB_resultado /100) + GEB_resultado
     elif actividad_nivel == 'moderada':
@@ -61,7 +63,7 @@ def calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, 
         # return el resultado
     return kcal
 
-st.sidebar.title('Creado por "Lohe"')
+
 st.title('Proyecto Final') 
 st.title('Hagamos tu Menu')
 st.header('Necesitamos unos datos para poder ayudarte')
@@ -71,6 +73,7 @@ st.header('Necesitamos unos datos para poder ayudarte')
 if st.button('Calcular'):
         # Ejecuta la función con los parámetros introducidos
     resultado = calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad)
+    resultado = int(resultado)
         # Muestra el resultado
     st.metric(label='Kcal', value=resultado)
 
@@ -86,8 +89,10 @@ def consulta_recetas():
 
     # Consultar las 5 recetas que sumen cierta cantidad de calorías
     calorias_objetivo = calcular_kcal(Genero, Tipo_de_actividad, Objetivo, Horario_de_la_actividad, Edad, Peso, Estatura, Tiempo_de_actividad)
+    calorias_objetivo = int(calorias_objetivo)
     print(calorias_objetivo)
-    query = sa.text(f"SELECT Nombre, Calorías_por_porción, Proteínas_por_porción, Carbohidratos_por_porción, Grasas_por_porción, URL, Imagen, Tipo_de_comida FROM recetas WHERE Calorías_por_porción <= {calorias_objetivo} AND Tipo_de_comida IN ('breakfast', 'lunch', 'dinner', 'snack') ORDER BY Tipo_de_comida LIMIT 5")
+    query = sa.text(f"SELECT Nombre, Calorías_por_porción, Proteínas_por_porción, Carbohidratos_por_porción, Grasas_por_porción, URL, Imagen, Tipo_de_comida FROM recetas WHERE Calorías_por_porción <= {calorias_objetivo} AND Tipo_de_comida IN ('breakfast', 'lunch', 'dinner', 'snack') ORDER BY RAND() LIMIT 5")
+    
     result = conn.execute(query)
 
     # Mostrar los resultados en Streamlit
