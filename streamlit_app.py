@@ -98,7 +98,9 @@ def consulta_recetas():
         st.write(f" Tipo de comida: {Tipo_de_comida} ")
 
         # Mostrar la imagen de la receta
-        st.image(imagen_url, use_column_width=True)
+        st.image(imagen_url, use_column_width=True,
+                 caption=f"Imagen de {nombre}",#tamaño de la imagen en la pagina web 
+                 clamp=True, channels='RGB', output_format='auto')
         
         # Crear un gráfico de tarta
         labels = ['Proteínas', 'Carbohidratos', 'Grasas']
