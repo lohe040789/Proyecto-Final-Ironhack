@@ -123,4 +123,4 @@ if st.button("Consultar recetas"):
 
 
 
-#En el teminal: streamlit run streamlit_app.py
+#En el teminal: streamlit run streamlit_app.py k
